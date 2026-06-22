@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>世界杯 · 信息卡片介绍</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #eef6f4;
+            color: #1a2e2a;
+            line-height: 1.6;
+            padding: 20px 16px 40px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* 主视觉 — 抽象网格装饰 */
+        .hero {
+            background: linear-gradient(145deg, #d3efe8 0%, #b6dfd6 100%);
+            border-radius: 32px;
+            padding: 36px 28px 40px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(28, 82, 72, 0.08);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 120px;
+            height: 120px;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(44, 130, 112, 0.08) 10px,
+                rgba(44, 130, 112, 0.08) 11px
+            );
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: #0b312a;
+            position: relative;
+            z-index: 2;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            margin-top: 16px;
+            max-width: 600px;
+            font-size: 1.05rem;
+            color: #1b4a41;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero .grid-badge {
+            display: inline-block;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(2px);
+            padding: 8px 18px;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #10463b;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* 通用网格卡片 */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px 22px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+            transition: transform 0.15s ease, box-shadow 0.2s;
+            border: 1px solid rgba(44, 130, 112, 0.06);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(28, 82, 72, 0.08);
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #07362e;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2 .em {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #2b8a74;
+            border-radius: 2px;
+            margin-right: 2px;
+        }
+
+        .card p, .card li {
+            color: #1f423b;
+            font-size: 0.98rem;
+        }
+
+        .card ul {
+            padding-left: 20px;
+            list-style: none;
+            margin-top: 8px;
+        }
+
+        .card ul li {
+            position: relative;
+            padding-left: 18px;
+            margin-bottom: 8px;
+        }
+
+        .card ul li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: #2b8a74;
+            font-weight: 600;
+        }
+
+        .card .tag {
+            display: inline-block;
+            background: #dff0eb;
+            color: #0d4c3f;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 3px 12px;
+            border-radius: 100px;
+            margin-right: 8px;
+            margin-bottom: 4px;
+        }
+
+        /* 自然链接段落 */
+        .link-sentence {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 28px 24px;
+            margin-bottom: 28px;
+            border-left: 6px solid #2b8a74;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+        }
+
+        .link-sentence p {
+            font-size: 1.02rem;
+            color: #1f423b;
+        }
+
+        .link-sentence a {
+            color: #1b705b;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.15s, background 0.15s;
+            padding: 0 2px;
+        }
+
+        .link-sentence a:hover {
+            border-bottom-color: #2b8a74;
+            background: #e1f3ee;
+            border-radius: 2px;
+        }
+
+        /* FAQ 摘要 及 提示 */
+        .faq-mini {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 20px 22px 24px;
+            margin-bottom: 28px;
+            border: 1px solid rgba(44, 130, 112, 0.12);
+        }
+
+        .faq-mini h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #07362e;
+            margin-bottom: 14px;
+        }
+
+        .faq-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #e2f0ec;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-item strong {
+            display: block;
+            font-weight: 600;
+            color: #195c4c;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+
+        .faq-item span {
+            color: #2c5a50;
+            font-size: 0.92rem;
+        }
+
+        .note {
+            background: #d8ede7;
+            border-radius: 60px;
+            padding: 14px 22px;
+            font-size: 0.9rem;
+            color: #134e40;
+            display: inline-block;
+            width: auto;
+            margin-top: 4px;
+            margin-bottom: 24px;
+        }
+
+        /* 响应式 */
+        @media (min-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (min-width: 860px) {
+            .grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            body {
+                padding: 32px 40px 60px;
+            }
+            .link-sentence {
+                padding: 32px 40px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .hero {
+                padding: 28px 18px;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .card {
+                padding: 20px 16px;
+            }
+        }
+
+        /* 小点缀 */
+        .footer-note {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: #517a6f;
+            border-top: 1px solid #cde0da;
+            padding-top: 28px;
+        }
+
+        .footer-note a {
+            color: #1e6b59;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-note a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- hero 主视觉 -->
+    <div class="hero">
+        <h1>世界杯 · 知识卡片</h1>
+        <p>从赛事数据到历史对照，从观赛习惯到延伸阅读——围绕<span style="font-weight:600;color:#0b312a;">世界杯</span>的日常信息整理，适合查询、比较与深度浏览。</p>
+        <div class="grid-badge">⚽ 卡片式检索 · 移动优先</div>
+    </div>
+
+    <!-- 网格卡片：用途 + 适合人群 等 -->
+    <div class="grid">
+        <div class="card">
+            <h2><span class="em"></span>用途速查</h2>
+            <p>小组赛积分、淘汰赛对阵、历史冠军列表、单届射手榜——这些高频查询需求，可以直接在 <a href="https://down-wc26.com" style="color:#1b705b;font-weight:600;text-decoration:none;">世界杯</a> 专题页内通过结构化的卡片快速定位，不必反复搜索。</p>
+            <div style="margin-top:14px;">
+                <span class="tag">积分榜</span>
+                <span class="tag">历届冠军</span>
+                <span class="tag">赛程对照</span>
+                <span class="tag">进球数据</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><span class="em"></span>适合人群</h2>
+            <ul>
+                <li><strong>深度球迷</strong> — 需要对比历届赛事数据与延伸背景</li>
+                <li><strong>轻度观赛者</strong> — 想快速了解小组形势或淘汰赛路径</li>
+                <li><strong>内容创作者</strong> — 查找可信的赛事记录与趣味对照</li>
+                <li><strong>教育／科普场景</strong> — 用于课堂或团队知识分享</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2><span class="em"></span>内容特征</h2>
+            <p>每张卡片归纳一个独立信息单元：包括年份、举办地、决赛比分、最佳射手、参赛队数等字段。页面内嵌交互筛选，支持按大洲或年代浏览。</p>
+            <p style="margin-top:12px;">数据来源以官方记录为准，保留修正日志，便于回溯。</p>
+        </div>
+    </div>
+
+    <!-- 自然链接段落：嵌入“世界杯”文本（必须的a标签） -->
+    <div class="link-sentence">
+        <p>
+            在日常查阅中，很多人习惯先看小组赛对阵图，再对照淘汰赛树状图——这些都在同一个信息流里完成。
+            如果你正在找一份结构清晰、可横向比较的赛事档案，可以试试将 <a href="https://down-wc26.com">世界杯</a> 作为你的起点页面，里面包含了从1930年至今的主要赛事卡片，以及每届的延伸阅读笔记。
+        </p>
+    </div>
+
+    <!-- FAQ 摘要卡片 -->
+    <div class="faq-mini">
+        <h3>📋 常见信息对照（摘要）</h3>
+        <div class="faq-item">
+            <strong>🏆 冠军次数最多的国家</strong>
+            <span>巴西 (5次) — 1958、1962、1970、1994、2002</span>
+        </div>
+        <div class="faq-item">
+            <strong>⚽ 单届进球最多球员</strong>
+            <span>方丹 (13球, 1958) · 目前尚未被超越</span>
+        </div>
+        <div class="faq-item">
+            <strong>🌍 举办次数最多的大洲</strong>
+            <span>欧洲（11届）· 南美洲（5届）· 其他大洲合计9届</span>
+        </div>
+        <div class="faq-item">
+            <strong>📅 下一届举办时间</strong>
+            <span>2026年（美加墨联合举办）</span>
+        </div>
+    </div>
+
+    <!-- 小提示 / 说明 -->
+    <div class="note">
+        ℹ️ 所有卡片内容均基于公开赛事记录整理，适合日常对照与延伸阅读，不包含实时赔率或预测类信息。
+    </div>
+
+    <!-- 页脚 -->
+    <div class="footer-note">
+        <p>信息卡片索引 · <a href="https://down-wc26.com">世界杯</a> · 数据更新至2025年3月</p>
+    </div>
+</div>
+</body>
+</html>
